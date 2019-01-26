@@ -35,13 +35,13 @@ func (g Github) GetLatestVersion() (LatestVersion, error) {
 	var bodyJson GithubLatestTag
 	url := fmt.Sprintf("https://api.github.com/repos/%v/%v/releases/latest", g.Owner, g.Repo)
 	resp, err := http.Get(url)
-	if resp.StatusCode > 399 {
-		return LatestVersion{}, errors.New(fmt.Sprintf("Response from %v returned had a status: %v", url, resp.Status))
-	}
 	if err != nil {
 		return LatestVersion{}, err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode > 399 {
+		return LatestVersion{}, errors.New(fmt.Sprintf("Response from %v returned had a status: %v", url, resp.Status))
+	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return LatestVersion{}, err
